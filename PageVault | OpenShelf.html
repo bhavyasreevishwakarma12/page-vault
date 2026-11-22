@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PageVault | OpenShelf</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+    <div class="logo">📚 PageVault</div>
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#catalog">Explore Books</a>
+        <a href="#dashboard">My Dashboard</a>
+    </nav>
+    <button class="primary-btn" onclick="showForm()">+ List a Book</button>
+</header>
+
+<section class="hero" id="home">
+    <div>
+        <span class="tag">CAMPUS BOOK EXCHANGE</span>
+        <h1>Share Knowledge.<br><span>Save Money.</span></h1>
+        <p>Discover, borrow and exchange textbooks with students across your campus.</p>
+        <a href="#catalog" class="hero-btn">Explore Books →</a>
+    </div>
+    <div class="hero-icon">📖</div>
+</section>
+
+<section class="stats">
+    <div class="stat-card">
+        <h2 id="totalBooks">0</h2>
+        <p>Total Books</p>
+    </div>
+    <div class="stat-card">
+        <h2 id="availableBooks">0</h2>
+        <p>Available Books</p>
+    </div>
+    <div class="stat-card">
+        <h2 id="borrowedBooks">0</h2>
+        <p>Borrowed Books</p>
+    </div>
+    <div class="stat-card">
+        <h2 id="totalRequests">0</h2>
+        <p>Borrow Requests</p>
+    </div>
+</section>
+
+<div id="reminders"></div>
+
+<section class="catalog section" id="catalog">
+    <div class="section-heading">
+        <div>
+            <span class="tag">BOOK COLLECTION</span>
+            <h2>Explore Textbooks</h2>
+            <p>Find the right book for your next semester.</p>
+        </div>
+    </div>
+
+    <div class="search-area">
+        <input type="text" id="searchInput"
+            placeholder="Search title, author, course code...">
+        <select id="departmentFilter">
+            <option value="">All Departments</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Mechanical">Mechanical</option>
+            <option value="Electrical">Electrical</option>
+            <option value="Civil">Civil</option>
+            <option value="Science">Science</option>
+        </select>
+        <select id="statusFilter">
+            <option value="">All Availability</option>
+            <option value="Available">Available</option>
+            <option value="Borrowed">Borrowed</option>
+            <option value="Reserved">Reserved</option>
+        </select>
+    </div>
+
+    <div class="book-grid" id="bookGrid"></div>
+    <p id="emptyMessage" class="empty-message" hidden>No books found.</p>
+</section>
+
+<section class="section dashboard" id="dashboard">
+    <span class="tag">PERSONAL DASHBOARD</span>
+    <h2>My Books & Borrowing History</h2>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('listed')">My Listed Books</button>
+        <button class="tab-btn" onclick="switchTab('borrowed')">My Borrowed Books</button>
+        <button class="tab-btn" onclick="switchTab('requests')">Requests</button>
+    </div>
+
+    <div id="dashboardContent"></div>
+</section>
+
+<!-- Add Book Modal -->
+<div class="modal" id="bookModal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeForm()">×</button>
+        <h2>List a New Book</h2>
+        <form id="bookForm">
+            <input type="text" id="bookTitle" placeholder="Book Title" required>
+            <input type="text" id="bookAuthor" placeholder="Author Name" required>
+            <input type="text" id="bookEdition" placeholder="Edition">
+            <input type="text" id="bookCourse" placeholder="Course Code (e.g. CS301)" required>
+            <select id="bookDepartment" required>
+                <option value="">Select Department</option>
+                <option>Computer Science</option>
+                <option>Mechanical</option>
+                <option>Electrical</option>
+                <option>Civil</option>
+                <option>Science</option>
+            </select>
+            <select id="bookCondition">
+                <option>Excellent</option>
+                <option>Good</option>
+                <option>Fair</option>
+            </select>
+            <input type="text" id="bookISBN" placeholder="ISBN (optional)">
+            <button class="primary-btn" type="submit">Add Book</button>
+        </form>
+    </div>
+</div>
+
+<footer>
+    <h2>📚 PageVault</h2>
+    <p>Connecting students through books and knowledge.</p>
+    <p>© 2026 PageVault | OpenShelf Challenge</p>
+</footer>
+
+<script src="script.js"></script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body>
+</html>
